@@ -16,29 +16,48 @@ int randomNum(){
     }
 }
 
-void adjustUp(){for(int j=0; j < 4; j++){  //Testing to see if adjustment is needed
-        for (int i = 0; i < 4;i++) {
-                printf("Adjusting up!\n");
-                for(int vert=0; vert < 4; vert++) {
-                    for (int horiz = 0; horiz < 4;horiz++) {
-                        if(board[vert][horiz] == 0 && board[vert+1][horiz] != 0){
-                            board[vert][horiz] = board[vert+1][horiz];
-                            board[vert+1][horiz] = 0;
-                            printf("Moving (%d,%d) to (%d,%d).\n",(vert+1),horiz,vert,horiz);
+void adjust(char userInput){
+    int moveHoriz;
+    int moveVert;
+    int startPointH = 0; //The point on the board at which points are looked at
+    int startPointV = 0;
+    if(userInput == 'w'){
+        moveHoriz = 1;
+        moveVert = 0;
+    }else if(userInput == 's'){
+        moveHoriz = -1;
+        moveVert = 0;
+        startPointH = 1;
+    }else if(userInput == 'a'){
+        moveHoriz = 0;
+        moveVert = 1;
+    }else if(userInput == 'd'){
+        moveHoriz = 0;
+        moveVert = -1;
+        startPointH = 1;
+    }
+    else{
+        moveHoriz = 0;
+        moveVert = 0;
+    } for (int i = 0; i < 4; i++) { //Running for the maximum amount of times necessary to adjust everything
+                for(int vert = startPointH; vert < 4; vert++) {
+                    for (int horiz = startPointV; horiz < 4; horiz++) {
+                        if(board[vert][horiz] == 0 && board[vert+moveHoriz][horiz+moveVert] != 0){
+                            board[vert][horiz] = board[vert+moveHoriz][horiz+moveVert];
+                            board[vert+moveHoriz][horiz+moveVert] = 0;
+                            printf("Moving (%d,%d) to (%d,%d).\n",(vert+moveHoriz),(horiz+moveVert),vert,horiz);
                         }
 
-                        if(board[vert][horiz] == board[vert+1][horiz]){
+                        if(board[vert][horiz] == board[vert+moveHoriz][horiz+moveVert] && board[vert][horiz]!=0){
                             board[vert][horiz] = (board[vert][horiz]*2);
-                            board[vert+1][horiz] = 0;
-                            printf("Adding (%d,%d) to (%d,%d).\n",(vert+1),horiz,vert,horiz);
+                            board[vert+moveHoriz][horiz] = 0;
+                            printf("Adding (%d,%d) to (%d,%d).\n",(vert+1),(horiz+moveVert),vert,horiz);
                         }
                     }
 
                 }
-                printf("Adjusted up!\n");
         }
-        printf("All tiles should be moved.");
-    }
+
 }
 
 void PrintBoard()
@@ -70,7 +89,7 @@ int main() {
     int array [3][3] = {0};
 
 
-    board[(rand() % 3 + 0)][(rand() % 3 + 0)] = tileGen();
+    /*board[(rand() % 3 + 0)][(rand() % 3 + 0)] = tileGen();
     int pos2x = (rand() % 3 + 0);
     int pos2y = (rand() % 3 + 0);
     while(board[pos2x][pos2y] != 0){
@@ -78,7 +97,15 @@ int main() {
         pos2y = (rand() % 3 + 0);
     }
 
-    board[pos2x][pos2y] = tileGen();
+    board[pos2x][pos2y] = tileGen();*/
+
+
+    board[2][0] = 2;
+    board[0][1] = 2;
+    board[0][2] = 2;
+    board[1][2] = 2;
+    board[2][3] = 2;
+
 
     Boolean playing = true;
 
@@ -86,11 +113,9 @@ int main() {
     while (playing) {
         PrintBoard();
         scanf(" %c", &userInput);
-        if(userInput == 'w'){
-            adjustUp();
-        }
+            adjust(userInput);
+
         PrintBoard();
-        playing = false;
     }
 
     return 0;
