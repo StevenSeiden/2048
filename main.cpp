@@ -26,6 +26,12 @@ void adjustUp(){for(int j=0; j < 4; j++){  //Testing to see if adjustment is nee
                             board[vert+1][horiz] = 0;
                             printf("Moving (%d,%d) to (%d,%d).\n",(vert+1),horiz,vert,horiz);
                         }
+
+                        if(board[vert][horiz] == board[vert+1][horiz]){
+                            board[vert][horiz] = (board[vert][horiz]*2);
+                            board[vert+1][horiz] = 0;
+                            printf("Adding (%d,%d) to (%d,%d).\n",(vert+1),horiz,vert,horiz);
+                        }
                     }
 
                 }
@@ -73,7 +79,6 @@ int main() {
     }
 
     board[pos2x][pos2y] = tileGen();
-
 
     Boolean playing = true;
 
