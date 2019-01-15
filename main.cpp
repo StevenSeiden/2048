@@ -105,11 +105,14 @@ int main() {
     PrintBoard();
     char userInput;
     while (playing) {
-
         scanf(" %c", &userInput);
+        if(userInput=='x') {
+            return 0;
+        }else if(userInput=='w' || userInput=='a' || userInput=='s' || userInput=='d'){
             adjust(userInput);
-            tileGen();
-            PrintBoard();
+        }
+        tileGen();
+        PrintBoard();
     }
 
     return 0;
