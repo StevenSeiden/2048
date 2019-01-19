@@ -8,6 +8,9 @@
 
 using namespace std;
 
+std::string reset = "\033[0m";
+std::string blue = "\u001b[44;5;1m";
+
 int board[4][4];
 int score = 1;
 bool reachedGoal;
@@ -37,7 +40,7 @@ void combineTiles(int vert, int horiz, int moveVert, int moveHoriz) {
         board[vert + moveVert][horiz + moveHoriz] = 0;
         printf("Adding (%d,%d) to (%d,%d).\n", (vert + moveVert), (horiz + moveHoriz), vert, horiz);
         score = score + board[vert][horiz];
-        if(board[vert][horiz] == 16){
+        if(board[vert][horiz] == 8){
             reachedGoal = true;
         }
     }
@@ -53,7 +56,7 @@ void adjust(char userInput) {
                 }
             }
         } else {
-            for (int vert = 0; vert < 4; vert++) {
+            for (int vert = 0; vert < 3; vert++) {
                 if (userInput == 'w') {
                     for (int horiz = 0; horiz < 4; horiz++) {
                         moveTiles(vert, horiz, 1, 0);
@@ -81,9 +84,9 @@ void PrintBoard() {
         printf("\n");
 
     if(reachedGoal){
-        cout<<("_______________________________________")<<endl;
-        cout<<("| Congrats!  You created a 2048 tile! |")<<endl;
-        cout<<("---------------------------------------")<<endl;
+        cout<<blue<<("_______________________________________")<<reset<<endl;
+        cout<<blue<<("|  Congrats!  You created a 16 tile!  |")<<reset<<endl;
+        cout<<blue<<("---------------------------------------")<<reset<<endl;
         reachedGoal = false;
     }
 
@@ -131,6 +134,11 @@ int main() {
     board[0][2] = 2;
     board[1][2] = 2;
     board[2][2] = 2;*/
+
+    /*board[0][0] = 4;  <- Another test board
+    board[1][0] = 4;
+    board[1][1] = 2;
+    board[1][2] = 2;*/
 
     Boolean playing = true;
 

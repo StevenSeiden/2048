@@ -3,5 +3,5 @@ language: cpp
 compiler: g++
 
 script:
-- g++ main.cpp -o travis_gcc_cpp98
-- ./travis_gcc_cpp98 < testing.txt
+- g++ main.cpp -o travis_gcc_cpp17
+- ./travis_gcc_cpp17 < testing.txt
