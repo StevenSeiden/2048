@@ -5,14 +5,16 @@
 #include <stdlib.h>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 using namespace std;
 
 std::string reset = "\033[0m";
-std::string blue = "\u001b[44;5;1m";
+std::string blue = "\u001b[34;5;1m";
 
 int board[4][4];
-int score = 1;
+int score = 0;
+string highScore;
 bool reachedGoal;
 
 int randomNum() {
@@ -40,7 +42,7 @@ void combineTiles(int vert, int horiz, int moveVert, int moveHoriz) {
         board[vert + moveVert][horiz + moveHoriz] = 0;
         printf("Adding (%d,%d) to (%d,%d).\n", (vert + moveVert), (horiz + moveHoriz), vert, horiz);
         score = score + board[vert][horiz];
-        if(board[vert][horiz] == 8){
+        if(board[vert][horiz] == 16){
             reachedGoal = true;
         }
     }
@@ -84,13 +86,23 @@ void PrintBoard() {
         printf("\n");
 
     if(reachedGoal){
-        cout<<blue<<("_______________________________________")<<reset<<endl;
-        cout<<blue<<("|  Congrats!  You created a 16 tile!  |")<<reset<<endl;
-        cout<<blue<<("---------------------------------------")<<reset<<endl;
+        cout<<blue<<("***************************************")<<reset<<endl;
+        cout<<blue<<("*  Congrats!  You created a 16 tile!  *")<<reset<<endl;
+        cout<<blue<<("***************************************")<<reset<<endl;
         reachedGoal = false;
     }
 
-    cout << ("Score: ") << score - 1 << endl;
+    cout << "\u001b[7m" << ("Score: ") << score;
+    if(to_string(score)>=highScore){
+        cout << " - High Score!" << endl << reset;
+        highScore = to_string(score);
+        ofstream file;
+        file.open ("scoresheet.txt");
+        file << highScore;
+        file.close();
+    }else{
+        cout  << endl << reset;
+    }
     cout << setfill(' ') << setw(4) << board[0][0] << setfill(' ') << setw(4) << board[0][1]
          << setfill(' ') << setw(4) << board[0][2] << setfill(' ') << setw(4) << board[0][3] << endl;
 
@@ -122,9 +134,17 @@ void tileGen() {
 }
 
 int main() {
-    srand(time(NULL));
+    ifstream scoreSheet ("scoresheet.txt");
+    if (scoreSheet.is_open())
+    {
+        while ( getline (scoreSheet,highScore) )
+        {
+            cout << highScore << '\n';
+        }
+        scoreSheet.close();
+    }
 
-    int array[3][3] = {0};
+    srand(time(NULL));
 
     tileGen();
     tileGen();
