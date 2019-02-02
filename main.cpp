@@ -141,11 +141,11 @@ void printBoard() {
 }
 
 void tileGen() {
-    int pos2x = (rand() % 3 + 0);
-    int pos2y = (rand() % 3 + 0);
+    int pos2x = (rand() % 10)%4;
+    int pos2y = (rand() % 10)%4;
     while (board[pos2x][pos2y] != 0) {
-        pos2x = (rand() % 3 + 0);
-        pos2y = (rand() % 3 + 0);
+        pos2x = (rand() % 10)%4;
+        pos2y = (rand() % 10)%4;
     }
     int newTile = randomNum();
     if (newTile >= 9) {
@@ -169,7 +169,6 @@ int main() {
     }
 
     srand(time(NULL));
-
     tileGen();
     tileGen();
 
