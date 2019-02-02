@@ -10,7 +10,11 @@
 using namespace std;
 
 std::string reset = "\033[0m";
-std::string blue = "\u001b[34;5;1m";
+std::string flashBlue = "\u001b[34;5;1m";
+std::string red = "\u001b[31;1m";
+std::string blue = "\u001b[34;1m";
+std::string green = "\u001b[32;1m";
+std::string yellow = "\u001b[33;1m";
 
 int boardSize = 4;
 int board[4][4];
@@ -18,6 +22,7 @@ int score = 0;
 int highScore;
 bool reachedGoal;
 bool changesMade;
+bool playing;
 
 int randomNum() {
     int randomNumber;
@@ -54,19 +59,31 @@ void combineTiles(int vert, int horiz, int moveVert, int moveHoriz) {
 
 //This checks to see if the board is full, and returns true if full
 Boolean checkFull() {
-    Boolean isFull = false;
-    for (int i = 0; i < (boardSize - 1); i = i + 2) {
-        for (int j = 0; i < (boardSize - 1); i = i + 2) {
-            if (board[i][j] != 0 && board[i][j] != board[i + 1][j] &&
-                board[i][j] != board[i][j + 1] && board[i + 1][j] != 0 &&
-                board[i][j + 1] != 0) {
-                isFull = true;
-            } else {
-                return false; //At least one location is open
+    for (int i = 0; i <= (boardSize - 1); i++) {
+        for (int j = 0; j <= (boardSize - 1); j++) {
+            if (board[i][j] == 0) {
+                return false;
             }
         }
     }
-    return isFull;
+    for (int i = 0; i <= (boardSize - 1); i++) {
+        for (int j = 0; j <= (boardSize - 1); j++) {
+            if (i >= (boardSize - 2) || j >= (boardSize - 2)) {
+                if (board[i][j] == board[i + 1][j] || board[i][j] == board[i][j + 1]) {
+                    return false;
+                }
+            } else if (i >= (boardSize - 2)) {
+                if (board[i][j] == board[i][j + 1]) {
+                    return false;
+                }
+            } else {
+                if (board[i][j] == board[i + 1][j]) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
 }
 
 void adjust(char userInput) {
@@ -104,16 +121,17 @@ void adjust(char userInput) {
     }
 }
 
+void clearSpace(int lines){
+    int n;
+    for (n = 0; n < lines; n++)
+        printf("\n");
+}
 
 void printBoard() {
-    int n;
-    for (n = 0; n < 10; n++)
-        printf("\n");
-
     if (reachedGoal) {
-        cout << blue << ("***************************************") << reset << endl;
-        cout << blue << ("*  Congrats!  You created a 16 tile!  *") << reset << endl;
-        cout << blue << ("***************************************") << reset << endl;
+        cout << flashBlue << ("***************************************") << reset << endl;
+        cout << flashBlue << ("*  Congrats!  You created a 16 tile!  *") << reset << endl;
+        cout << flashBlue << ("***************************************") << reset << endl;
         reachedGoal = false;
     }
 
@@ -156,17 +174,26 @@ void tileGen() {
         cout << ("Adding a tile of ") << 2 << (" at position ") << pos2x << (", ") << pos2y << endl;
     }
 }
+int gameOver(){
+    clearSpace(10);
+    cout << red << " _____                        _____                \n"
+                   "|  __ \\                      |  _  |               \n"
+                   "| |  \\/ __ _ _ __ ___   ___  | | | |_   _____ _ __ \n"
+                   "| | __ / _` | '_ ` _ \\ / _ \\ | | | \\ \\ / / _ \\ '__|\n"
+                   "| |_\\ \\ (_| | | | | | |  __/ \\ \\_/ /\\ V /  __/ |   \n"
+                   " \\____/\\__,_|_| |_| |_|\\___|  \\___/  \\_/ \\___|_|   \n" << reset << endl;
+    printBoard();
 
-int main() {
-    std::fstream scoresheet("scoresheet.txt", std::ios_base::in);
+    cout << "\nPress " << "\u001b[7mc" << reset << " to " << "\u001b[7mc" << reset << "ontinue." << endl;
+    char userInput;
+    scanf(" %c", &userInput);
+    if (userInput == 'c') {
+        playing = false;
+        return 0;
+    }
+}
 
-    scoresheet >> highScore;
-
-    scoresheet.close();
-
-    cout << (highScore) << endl;
-
-    srand(time(NULL));
+int game() {
     tileGen();
     tileGen();
 
@@ -181,8 +208,30 @@ int main() {
     board[1][1] = 2;
     board[1][2] = 2;*/
 
-    Boolean playing = true;
 
+    board[0][0] = 4;
+    board[1][0] = 8;
+    board[2][0] = 16;
+    board[3][0] = 32;
+
+    board[0][1] = 8;
+    board[1][1] = 16;
+    board[2][1] = 8;
+    board[3][1] = 4;
+
+    board[0][2] = 128;
+    board[1][2] = 2;
+    board[2][2] = 512;
+    board[3][2] = 16;
+
+    board[0][3] = 16;
+    board[1][3] = 8;
+    board[2][3] = 256;
+    board[3][3] = 256;
+
+    playing = true;
+
+    clearSpace(20);
     printBoard();
     char userInput;
     while (playing) {
@@ -196,12 +245,78 @@ int main() {
                 tileGen();
                 changesMade = false;
             }
+            clearSpace(20);
             printBoard();
             if (checkFull()) {
-                cout << "Game Over" << endl;
+                gameOver();
             }
         }
     }
-
     return 0;
+}
+
+int help() {
+    clearSpace(10);
+    cout << "\u001b[1mWelcome to 2048!\n" << reset <<
+         "\n"
+         "2048 is a simple game in which\n"
+         "the goal is to combine like\n"
+         "tiles to reach the 2048 tile.\n"
+         "\n"
+         "\u001b[1mKeys:\n" << reset <<
+         "w = Move tiles up\n"
+         "s = Move tiles down\n"
+         "a = Move tiles left\n"
+         "d = Move tiles right\n"
+         "x = Main menu" << endl;
+
+    cout << "\nPress " << "\u001b[7mc" << reset << " to " << "\u001b[7mc" << reset << "ontinue." << endl;
+    char userInput;
+    scanf(" %c", &userInput);
+    if (userInput == 'c') {
+        return 0;
+    }
+}
+
+int main() {
+    clearSpace(20);
+    srand(time(NULL));
+    std::fstream scoresheet("scoresheet.txt", std::ios_base::in);
+    scoresheet >> highScore;
+    scoresheet.close();
+
+    clearSpace(10);
+
+    char userInput;
+    while (true) {
+
+        cout << red << " .d8888b.   " << green << ".d8888b.      " << yellow << "d8888   " << blue << ".d8888b.  \n"
+             << red << "d88P  Y88b " << green << "d88P  Y88b    " << yellow << "d8P888  " << blue << "d88P  Y88b \n"
+             << red << "       888 " << green << "888    888   " << yellow << "d8P 888  " << blue << "Y88b. d88P \n"
+             << red << "     .d88P " << green << "888    888  " << yellow << "d8P  888   " << blue << "\"Y88888\"  \n"
+             << red << " .od888P\"  " << green << "888    888 " << yellow << "d88   888  " << blue << ".d8P\"\"Y8b. \n"
+             << red << "d88P\"      " << green << "888    888 " << yellow << "8888888888 " << blue << "888    888 \n"
+             << red << "888\"       " << green << "Y88b  d88P       " << yellow << "888  " << blue << "Y88b  d88P \n"
+             << red << "888888888   " << green << "\"Y8888P\"        " << yellow << "888   " << blue << "\"Y8888P\" \n"
+             << reset << endl;
+
+        cout << "Welcome to 2048!" << endl;
+
+        cout << " \n\n\u001b[7mN" << reset << "ew game" << endl;
+        cout << "View " << "\u001b[7mh" << reset << "elp" << endl;
+        cout << "E" << "\u001b[7mx" << reset << "it game" << endl;
+
+        cout << "\n\n\n" << "\u001b[7m Highscore: " << highScore <<
+             "    Create by Steven Seiden   © Steven Seiden 2019" << reset << endl;
+
+
+        scanf(" %c", &userInput);
+        if (userInput == 'n') {
+            game();
+        } else if (userInput == 'h') {
+            help();
+        } else if (userInput == 'x') {
+            return 0;
+        }
+    }
 }
