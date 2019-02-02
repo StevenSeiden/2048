@@ -6,7 +6,6 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <string>
 
 using namespace std;
 
@@ -46,7 +45,7 @@ void combineTiles(int vert, int horiz, int moveVert, int moveHoriz) {
         board[vert + moveVert][horiz + moveHoriz] = 0;
         printf("Adding (%d,%d) to (%d,%d).\n", (vert + moveVert), (horiz + moveHoriz), vert, horiz);
         score = score + board[vert][horiz];
-        if(board[vert][horiz] == 16){
+        if (board[vert][horiz] == 16) {
             reachedGoal = true;
         }
         changesMade = true;
@@ -54,15 +53,15 @@ void combineTiles(int vert, int horiz, int moveVert, int moveHoriz) {
 }
 
 //This checks to see if the board is full, and returns true if full
-Boolean checkFull(){
+Boolean checkFull() {
     Boolean isFull = false;
-    for(int i = 0; i<(boardSize-1); i = i + 2){
-        for(int j = 0; i<(boardSize-1); i = i + 2){
-            if(board[i][j] != 0 && board[i][j] != board[i+1][j] &&
-            board[i][j] != board[i][j+1] && board[i+1][j] != 0 &&
-            board[i][j+1] != 0){
+    for (int i = 0; i < (boardSize - 1); i = i + 2) {
+        for (int j = 0; i < (boardSize - 1); i = i + 2) {
+            if (board[i][j] != 0 && board[i][j] != board[i + 1][j] &&
+                board[i][j] != board[i][j + 1] && board[i + 1][j] != 0 &&
+                board[i][j + 1] != 0) {
                 isFull = true;
-            }else{
+            } else {
                 return false; //At least one location is open
             }
         }
@@ -73,59 +72,60 @@ Boolean checkFull(){
 void adjust(char userInput) {
     changesMade = false;
     for (int i = 0; i < 4; i++) { //Running for the maximum amount of times necessary to adjust everything
-        if (userInput == 's') {
-                for (int vert = 3; vert > 0; vert--) {
-                    for (int horiz = 0; horiz < 4; horiz++) {
+        if (userInput == 's' || userInput == 'w') {
+            for (int horiz = 0; horiz < 4; horiz++) {
+                if (userInput == 's') {
+                    for (int vert = 3; vert > 0; vert--) {
                         moveTiles(vert, horiz, -1, 0);
                         combineTiles(vert, horiz, -1, 0);
                     }
+                } else {
+                    for (int vert = 0; vert < 3; vert++) {
+                        moveTiles(vert, horiz, 1, 0);
+                        combineTiles(vert, horiz, 1, 0);
+                    }
                 }
-        } else if (userInput == 'd'){
-            for (int vert = 3; vert >= 0; vert--) {
-                for (int horiz = 3; horiz > 0; horiz--) {
+            }
+        } else if (userInput == 'd') {
+            for (int horiz = 3; horiz > 0; horiz--) {
+                for (int vert = 3; vert >= 0; vert--) {
                     moveTiles(vert, horiz, 0, -1);
                     combineTiles(vert, horiz, 0, -1);
                 }
             }
         } else {
-            for (int vert = 0; vert < 3; vert++) {
-                if (userInput == 'w') {
-                    for (int horiz = 0; horiz < 4; horiz++) {
-                        moveTiles(vert, horiz, 1, 0);
-                        combineTiles(vert, horiz, 1, 0);
-                    }
-                } else {
-                    for (int horiz = 0; horiz < 3; horiz++) {
-                        moveTiles(vert, horiz, 0, 1);
-                        combineTiles(vert, horiz, 0, 1);
-                    }
+            for (int horiz = 0; horiz < 3; horiz++) {
+                for (int vert = 0; vert < 4; vert++) {
+                    moveTiles(vert, horiz, 0, 1);
+                    combineTiles(vert, horiz, 0, 1);
                 }
             }
         }
     }
 }
 
+
 void printBoard() {
     int n;
     for (n = 0; n < 10; n++)
         printf("\n");
 
-    if(reachedGoal){
-        cout<<blue<<("***************************************")<<reset<<endl;
-        cout<<blue<<("*  Congrats!  You created a 16 tile!  *")<<reset<<endl;
-        cout<<blue<<("***************************************")<<reset<<endl;
+    if (reachedGoal) {
+        cout << blue << ("***************************************") << reset << endl;
+        cout << blue << ("*  Congrats!  You created a 16 tile!  *") << reset << endl;
+        cout << blue << ("***************************************") << reset << endl;
         reachedGoal = false;
     }
 
     cout << "\u001b[7m" << ("Score: ") << score;
-    if(score >= highScore){
+    if (score >= highScore) {
         cout << " - High Score!" << endl << reset;
         highScore = score;
-        ofstream scoresheet("example.txt");
+        ofstream scoresheet("scoresheet.txt");
         scoresheet << highScore << endl;
         scoresheet.close();
-    }else{
-        cout  << endl << reset;
+    } else {
+        cout << endl << reset;
     }
     cout << setfill(' ') << setw(4) << board[0][0] << setfill(' ') << setw(4) << board[0][1]
          << setfill(' ') << setw(4) << board[0][2] << setfill(' ') << setw(4) << board[0][3] << endl;
@@ -141,11 +141,11 @@ void printBoard() {
 }
 
 void tileGen() {
-    int pos2x = (rand() % 10)%4;
-    int pos2y = (rand() % 10)%4;
+    int pos2x = (rand() % 10) % 4;
+    int pos2y = (rand() % 10) % 4;
     while (board[pos2x][pos2y] != 0) {
-        pos2x = (rand() % 10)%4;
-        pos2y = (rand() % 10)%4;
+        pos2x = (rand() % 10) % 4;
+        pos2y = (rand() % 10) % 4;
     }
     int newTile = randomNum();
     if (newTile >= 9) {
@@ -192,12 +192,12 @@ int main() {
             return 0;
         } else if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd') {
             adjust(userInput);
-            if(changesMade){
+            if (changesMade) {
                 tileGen();
                 changesMade = false;
             }
             printBoard();
-            if(checkFull()){
+            if (checkFull()) {
                 cout << "Game Over" << endl;
             }
         }
