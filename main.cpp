@@ -6,6 +6,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ std::string blue = "\u001b[34;5;1m";
 int boardSize = 4;
 int board[4][4];
 int score = 0;
-string highScore;
+int highScore;
 bool reachedGoal;
 bool changesMade;
 
@@ -72,20 +73,20 @@ Boolean checkFull(){
 void adjust(char userInput) {
     changesMade = false;
     for (int i = 0; i < 4; i++) { //Running for the maximum amount of times necessary to adjust everything
-        if (userInput == 's' || userInput == 'd') {
+        if (userInput == 's') {
                 for (int vert = 3; vert > 0; vert--) {
-                    if (userInput == 's') {
-                        for (int horiz = 0; horiz < 4; horiz++) {
-                            moveTiles(vert, horiz, -1, 0);
-                            combineTiles(vert, horiz, -1, 0);
-                        }
-                    } else {
-                        for (int horiz = 3; horiz > 0; horiz--) {
-                            moveTiles(vert, horiz, 0, -1);
-                            combineTiles(vert, horiz, 0, -1);
-                        }
+                    for (int horiz = 0; horiz < 4; horiz++) {
+                        moveTiles(vert, horiz, -1, 0);
+                        combineTiles(vert, horiz, -1, 0);
                     }
                 }
+        } else if (userInput == 'd'){
+            for (int vert = 3; vert >= 0; vert--) {
+                for (int horiz = 3; horiz > 0; horiz--) {
+                    moveTiles(vert, horiz, 0, -1);
+                    combineTiles(vert, horiz, 0, -1);
+                }
+            }
         } else {
             for (int vert = 0; vert < 3; vert++) {
                 if (userInput == 'w') {
@@ -117,13 +118,12 @@ void printBoard() {
     }
 
     cout << "\u001b[7m" << ("Score: ") << score;
-    if(to_string(score)>=highScore){
+    if(score >= highScore){
         cout << " - High Score!" << endl << reset;
-        highScore = to_string(score);
-        ofstream file;
-        file.open ("scoresheet.txt");
-        file << highScore;
-        file.close();
+        highScore = score;
+        ofstream scoresheet("example.txt");
+        scoresheet << highScore << endl;
+        scoresheet.close();
     }else{
         cout  << endl << reset;
     }
@@ -158,15 +158,13 @@ void tileGen() {
 }
 
 int main() {
-    ifstream scoreSheet ("scoresheet.txt");
-    if (scoreSheet.is_open())
-    {
-        while ( getline(scoreSheet,highScore))
-        {
-            cout << "High Score: " << highScore << '\n';
-        }
-        scoreSheet.close();
-    }
+    std::fstream scoresheet("scoresheet.txt", std::ios_base::in);
+
+    scoresheet >> highScore;
+
+    scoresheet.close();
+
+    cout << (highScore) << endl;
 
     srand(time(NULL));
     tileGen();
