@@ -127,6 +127,26 @@ void clearSpace(int lines){
         printf("\n");
 }
 
+string coloredNum(int value){
+    switch(value) {
+        case 0 : return "\033[0m";
+        case 2 : return "\u001b[38;5;141m";
+        case 4 : return "\u001b[38;5;212m";
+        case 8 : return "\u001b[38;5;208m";
+        case 16 : return "\u001b[38;5;196m";
+        case 32 : return "\u001b[38;5;93m";
+        case 64 : return "\u001b[38;5;27m";
+        case 128 : return "\u001b[38;5;31m";
+        case 256 : return "\u001b[38;8;36m";
+        case 512 : return "\u001b[38;5;34m";
+        case 1024 : return "\u001b[38;5;214m";
+        case 2048 : return "\u001b[38;5;222m";
+        case 4096 : return "\u001b[38;5;189m";
+        case 8192 : return "\u001b[38;5;117m";
+        default: return "\u001b[31;1m";
+    }
+}
+
 void printBoard() {
     if (reachedGoal) {
         cout << flashBlue << ("***************************************") << reset << endl;
@@ -145,17 +165,18 @@ void printBoard() {
     } else {
         cout << endl << reset;
     }
-    cout << setfill(' ') << setw(4) << board[0][0] << setfill(' ') << setw(4) << board[0][1]
-         << setfill(' ') << setw(4) << board[0][2] << setfill(' ') << setw(4) << board[0][3] << endl;
+    cout  << coloredNum(board[0][0]) << setfill(' ') << setw(8) << board[0][0] << coloredNum(board[0][1]) << setfill(' ') << setw(8) << board[0][1]
+          << coloredNum(board[0][2]) << setfill(' ') << setw(8) << board[0][2]  << coloredNum(board[0][3]) << setfill(' ') << setw(8) << board[0][3] << endl;
 
-    cout << setfill(' ') << setw(4) << board[1][0] << setfill(' ') << setw(4) << board[1][1]
-         << setfill(' ') << setw(4) << board[1][2] << setfill(' ') << setw(4) << board[1][3] << endl;
+    cout  << coloredNum(board[1][0]) << setfill(' ') << setw(8) << board[1][0] << coloredNum(board[1][1]) << setfill(' ') << setw(8) << board[1][1]
+          << coloredNum(board[1][2]) << setfill(' ') << setw(8) << board[1][2]  << coloredNum(board[1][3]) << setfill(' ') << setw(8) << board[1][3] << endl;
 
-    cout << setfill(' ') << setw(4) << board[2][0] << setfill(' ') << setw(4) << board[2][1]
-         << setfill(' ') << setw(4) << board[2][2] << setfill(' ') << setw(4) << board[2][3] << endl;
+    cout  << coloredNum(board[2][0]) << setfill(' ') << setw(8) << board[2][0] << coloredNum(board[2][1]) << setfill(' ') << setw(8) << board[2][1]
+          << coloredNum(board[2][2]) << setfill(' ') << setw(8) << board[2][2]  << coloredNum(board[2][3]) << setfill(' ') << setw(8) << board[2][3] << endl;
 
-    cout << setfill(' ') << setw(4) << board[3][0] << setfill(' ') << setw(4) << board[3][1]
-         << setfill(' ') << setw(4) << board[3][2] << setfill(' ') << setw(4) << board[3][3] << endl;
+    cout  << coloredNum(board[3][0]) << setfill(' ') << setw(8) << board[3][0] << coloredNum(board[3][1]) << setfill(' ') << setw(8) << board[3][1]
+          << coloredNum(board[3][2]) << setfill(' ') << setw(8) << board[3][2]  << coloredNum(board[3][3]) << setfill(' ') << setw(8) << board[3][3] << endl;
+
 }
 
 void tileGen() {
@@ -209,25 +230,25 @@ int game() {
     board[1][2] = 2;*/
 
 
-    board[0][0] = 4;
-    board[1][0] = 8;
-    board[2][0] = 16;
-    board[3][0] = 32;
+    board[0][0] = 2;
+    board[1][0] = 4;
+    board[2][0] = 8;
+    board[3][0] = 16;
 
-    board[0][1] = 8;
-    board[1][1] = 16;
-    board[2][1] = 8;
-    board[3][1] = 4;
+    board[0][1] = 32;
+    board[1][1] = 64;
+    board[2][1] = 128;
+    board[3][1] = 256;
 
-    board[0][2] = 128;
-    board[1][2] = 2;
-    board[2][2] = 512;
-    board[3][2] = 16;
+    board[0][2] = 512;
+    board[1][2] = 1024;
+    board[2][2] = 2048;
+    board[3][2] = 4096;
 
-    board[0][3] = 16;
-    board[1][3] = 8;
-    board[2][3] = 256;
-    board[3][3] = 256;
+    board[0][3] = 8192;
+    board[1][3] = 0;
+    board[2][3] = 0;
+    board[3][3] = 0;
 
     playing = true;
 
