@@ -25,6 +25,7 @@ bool changesMade;
 bool playing;
 int tilePlacedX;
 int tilePlacedY;
+bool coloring = true;
 
 int randomNum() {
     int randomNumber;
@@ -123,29 +124,48 @@ void adjust(char userInput) {
     }
 }
 
-void clearSpace(int lines){
+void clearSpace(int lines) {
     int n;
     for (n = 0; n < lines; n++)
         printf("\n");
 }
 
-string coloredNum(int value){
-    switch(value) {
-        case 0 : return "\033[0m";
-        case 2 : return "\u001b[38;5;141m";
-        case 4 : return "\u001b[38;5;212m";
-        case 8 : return "\u001b[38;5;208m";
-        case 16 : return "\u001b[38;5;196m";
-        case 32 : return "\u001b[38;5;93m";
-        case 64 : return "\u001b[38;5;27m";
-        case 128 : return "\u001b[38;5;31m";
-        case 256 : return "\u001b[38;8;36m";
-        case 512 : return "\u001b[38;5;34m";
-        case 1024 : return "\u001b[38;5;214m";
-        case 2048 : return "\u001b[38;5;222m";
-        case 4096 : return "\u001b[38;5;189m";
-        case 8192 : return "\u001b[38;5;117m";
-        default: return "\u001b[31;1m";
+string coloredNum(int value) {
+    if(coloring){
+        switch (value) {
+            case 0 :
+                return "\033[0m";
+            case 2 :
+                return "\u001b[38;5;141m";
+            case 4 :
+                return "\u001b[38;5;212m";
+            case 8 :
+                return "\u001b[38;5;208m";
+            case 16 :
+                return "\u001b[38;5;196m";
+            case 32 :
+                return "\u001b[38;5;93m";
+            case 64 :
+                return "\u001b[38;5;27m";
+            case 128 :
+                return "\u001b[38;5;31m";
+            case 256 :
+                return "\u001b[38;8;36m";
+            case 512 :
+                return "\u001b[38;5;34m";
+            case 1024 :
+                return "\u001b[38;5;214m";
+            case 2048 :
+                return "\u001b[38;5;222m";
+            case 4096 :
+                return "\u001b[38;5;189m";
+            case 8192 :
+                return "\u001b[38;5;117m";
+            default:
+                return "\u001b[31;1m";
+        }
+    } else {
+        return reset;
     }
 }
 
@@ -167,12 +187,12 @@ void printBoard() {
     } else {
         cout << endl << reset;
     }
-    for(int i = 0; i < boardSize; i++){
-        for(int j = 0; j < boardSize; j++){
-            if(tilePlacedX == i && tilePlacedY == j){
-                cout  << coloredNum(board[i][j]) << "\033[5m" << setfill(' ') << setw(8)  << board[i][j] << reset;
-            }else {
-                cout << coloredNum(board[i][j])  << setfill(' ') << setw(8) << board[i][j];
+    for (int i = 0; i < boardSize; i++) {
+        for (int j = 0; j < boardSize; j++) {
+            if (tilePlacedX == i && tilePlacedY == j) {
+                cout << coloredNum(board[i][j]) << "\033[5m" << setfill(' ') << setw(8) << board[i][j] << reset;
+            } else {
+                cout << coloredNum(board[i][j]) << setfill(' ') << setw(8) << board[i][j];
             }
         }
         cout << endl;
@@ -198,7 +218,8 @@ void tileGen() {
     tilePlacedX = pos2x;
     tilePlacedY = pos2y;
 }
-int gameOver(){
+
+int gameOver() {
     clearSpace(10);
     cout << red << " _____                        _____                \n"
                    "|  __ \\                      |  _  |               \n"
@@ -274,6 +295,8 @@ int game() {
             if (checkFull()) {
                 gameOver();
             }
+        } else if(userInput == 'k'){
+            coloring = false;
         }
     }
     return 0;
@@ -294,11 +317,33 @@ int help() {
          "d = Move tiles right\n"
          "x = Main menu" << endl;
 
-    cout << "\nPress " << "\u001b[7mc" << reset << " to " << "\u001b[7mc" << reset << "ontinue." << endl;
+    cout << "\nPress \u001b[7mc" << reset << " to \u001b[7mc" << reset << "ontinue." << endl;
     char userInput;
     scanf(" %c", &userInput);
     if (userInput == 'c') {
         return 0;
+    }
+}
+
+int settings(){
+    char userInput;
+    while (true) {
+    clearSpace(20);
+    cout << "\u001b[7m" << "Settings" << reset << "\n\n" << endl;
+    if(coloring){
+        cout <<  "C\u001b[7mo" << reset << "loring is enabled (good for 256 colored terminals)" << endl;
+    }else{
+        cout << "C\u001b[7mo" << reset << "loring is disabled (good for terminals lacking 256 colors)" << endl;
+    }
+
+        cout << "\nPress \u001b[7mc" << reset << " to \u001b[7mc" << reset << "ontinue." << endl;
+
+        scanf(" %c", &userInput);
+        if (userInput == 'o') {
+            coloring = !coloring;
+        } else if (userInput == 'x'){
+            return 0;
+        }
     }
 }
 
@@ -329,8 +374,9 @@ int main() {
         cout << " \n\n\u001b[7mN" << reset << "ew game" << endl;
         cout << "View " << "\u001b[7mh" << reset << "elp" << endl;
         cout << "E" << "\u001b[7mx" << reset << "it game" << endl;
+        cout <<  "\u001b[7mS" << reset << "ettings" << endl;
 
-        cout << "\n\n\n" << "\u001b[7m Highscore: " << highScore <<
+        cout << "\n\n" << "\u001b[7m Highscore: " << highScore <<
              "    Create by Steven Seiden   © Steven Seiden 2019" << reset << endl;
 
 
@@ -341,6 +387,8 @@ int main() {
             help();
         } else if (userInput == 'x') {
             return 0;
+        } else if (userInput == 's'){
+            settings();
         }
     }
 }
