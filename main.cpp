@@ -6,6 +6,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <tuple>
 
 using namespace std;
 
@@ -23,6 +24,8 @@ int highScore;
 bool reachedGoal;
 bool changesMade;
 bool playing;
+
+std::tuple<int,int> tilePlaced;
 
 int randomNum() {
     int randomNumber;
@@ -165,18 +168,12 @@ void printBoard() {
     } else {
         cout << endl << reset;
     }
-    cout  << coloredNum(board[0][0]) << setfill(' ') << setw(8) << board[0][0] << coloredNum(board[0][1]) << setfill(' ') << setw(8) << board[0][1]
-          << coloredNum(board[0][2]) << setfill(' ') << setw(8) << board[0][2]  << coloredNum(board[0][3]) << setfill(' ') << setw(8) << board[0][3] << endl;
-
-    cout  << coloredNum(board[1][0]) << setfill(' ') << setw(8) << board[1][0] << coloredNum(board[1][1]) << setfill(' ') << setw(8) << board[1][1]
-          << coloredNum(board[1][2]) << setfill(' ') << setw(8) << board[1][2]  << coloredNum(board[1][3]) << setfill(' ') << setw(8) << board[1][3] << endl;
-
-    cout  << coloredNum(board[2][0]) << setfill(' ') << setw(8) << board[2][0] << coloredNum(board[2][1]) << setfill(' ') << setw(8) << board[2][1]
-          << coloredNum(board[2][2]) << setfill(' ') << setw(8) << board[2][2]  << coloredNum(board[2][3]) << setfill(' ') << setw(8) << board[2][3] << endl;
-
-    cout  << coloredNum(board[3][0]) << setfill(' ') << setw(8) << board[3][0] << coloredNum(board[3][1]) << setfill(' ') << setw(8) << board[3][1]
-          << coloredNum(board[3][2]) << setfill(' ') << setw(8) << board[3][2]  << coloredNum(board[3][3]) << setfill(' ') << setw(8) << board[3][3] << endl;
-
+    for(int i = 0; i < boardSize; i++){
+        for(int j = 0; j < boardSize; j++){
+            cout  << coloredNum(board[i][j]) << setfill(' ') << setw(8) << board[i][j];
+        }
+        cout << endl;
+    }
 }
 
 void tileGen() {
@@ -190,9 +187,11 @@ void tileGen() {
     if (newTile >= 9) {
         board[pos2x][pos2y] = 4;
         cout << ("Adding a tile of ") << 4 << (" at position ") << pos2x << (", ") << pos2y << endl;
+        std::tie(pos2x,pos2y) = tilePlaced;
     } else {
         board[pos2x][pos2y] = 2;
         cout << ("Adding a tile of ") << 2 << (" at position ") << pos2x << (", ") << pos2y << endl;
+        std::tie(pos2x,pos2y) = tilePlaced;
     }
 }
 int gameOver(){
