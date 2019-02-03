@@ -350,16 +350,27 @@ int settings(){
             int userNum;
             while (userInputting) {
                 cout << "Note that setting a custom board size will disable \n"
-                        "saving your high score until set back to 4.\n" <<
+                        "saving your high score until set back to 4.\n"
+                        "This will also end your current game.\n" <<
                         "Please enter a new board size (2-9): ";
                 std::cin >> userNum;
                 if(!cin.fail()){
                     boardSize = userNum;
                     userInputting = false;
+                    playing = false;
                 }
             }
         }
     }
+}
+
+void newGame(){
+    for(int i = 0; i<10; i++){
+        for(int j = 0; j<10; j++){
+            board[i][j] = {0};
+        }
+    }
+    score = 0;
 }
 
 int main() {
@@ -387,7 +398,10 @@ int main() {
         cout << "Welcome to 2048!" << endl;
 
         cout << " \n\n\u001b[7mN" << reset << "ew game" << endl;
-        cout << "View " << "\u001b[7mh" << reset << "elp" << endl;
+        if(playing){
+            cout << "\u001b[7mC" << reset <<"ontinue game" << endl;
+        }
+        cout << "\nView " << "\u001b[7mh" << reset << "elp" << endl;
         cout << "E" << "\u001b[7mx" << reset << "it game" << endl;
         cout <<  "\u001b[7mS" << reset << "ettings" << endl;
 
@@ -397,6 +411,9 @@ int main() {
 
         scanf(" %c", &userInput);
         if (userInput == 'n') {
+            newGame();
+            game();
+        } else if (userInput == 'c') {
             game();
         } else if (userInput == 'h') {
             help();
