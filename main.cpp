@@ -17,7 +17,7 @@ std::string green = "\u001b[32;1m";
 std::string yellow = "\u001b[33;1m";
 
 int boardSize = 4;
-int board[4][4];
+int board[9][9];
 int score = 0;
 int highScore;
 bool reachedGoal;
@@ -26,6 +26,7 @@ bool playing;
 int tilePlacedX;
 int tilePlacedY;
 bool coloring = true;
+bool logging = true;
 
 int randomNum() {
     int randomNumber;
@@ -41,7 +42,9 @@ void moveTiles(int vert, int horiz, int moveVert, int moveHoriz) {
     if (board[vert][horiz] == 0 && board[vert + moveVert][horiz + moveHoriz] != 0) {
         board[vert][horiz] = board[vert + moveVert][horiz + moveHoriz];
         board[vert + moveVert][horiz + moveHoriz] = 0;
-        printf("Moving (%d,%d) to (%d,%d).\n", (vert + moveVert), (horiz + moveHoriz), vert, horiz);
+        if(logging){
+            printf("Moving (%d,%d) to (%d,%d).\n", (vert + moveVert), (horiz + moveHoriz), vert, horiz);
+        }
         changesMade = true;
     }
 }
@@ -51,7 +54,9 @@ void combineTiles(int vert, int horiz, int moveVert, int moveHoriz) {
         board[vert][horiz] = (board[vert][horiz] * 2);
         //The vert and horiz values are meant to be swapped here.
         board[vert + moveVert][horiz + moveHoriz] = 0;
-        printf("Adding (%d,%d) to (%d,%d).\n", (vert + moveVert), (horiz + moveHoriz), vert, horiz);
+        if(logging){
+            printf("Adding (%d,%d) to (%d,%d).\n", (vert + moveVert), (horiz + moveHoriz), vert, horiz);
+        }
         score = score + board[vert][horiz];
         if (board[vert][horiz] == 16) {
             reachedGoal = true;
@@ -91,31 +96,31 @@ Boolean checkFull() {
 
 void adjust(char userInput) {
     changesMade = false;
-    for (int i = 0; i < 4; i++) { //Running for the maximum amount of times necessary to adjust everything
+    for (int i = 0; i < boardSize; i++) { //Running for the maximum amount of times necessary to adjust everything
         if (userInput == 's' || userInput == 'w') {
-            for (int horiz = 0; horiz < 4; horiz++) {
+            for (int horiz = 0; horiz < boardSize; horiz++) {
                 if (userInput == 's') {
-                    for (int vert = 3; vert > 0; vert--) {
+                    for (int vert = (boardSize-1); vert > 0; vert--) {
                         moveTiles(vert, horiz, -1, 0);
                         combineTiles(vert, horiz, -1, 0);
                     }
                 } else {
-                    for (int vert = 0; vert < 3; vert++) {
+                    for (int vert = 0; vert < (boardSize-1); vert++) {
                         moveTiles(vert, horiz, 1, 0);
                         combineTiles(vert, horiz, 1, 0);
                     }
                 }
             }
         } else if (userInput == 'd') {
-            for (int horiz = 3; horiz > 0; horiz--) {
-                for (int vert = 3; vert >= 0; vert--) {
+            for (int horiz = (boardSize-1); horiz > 0; horiz--) {
+                for (int vert = (boardSize-1); vert >= 0; vert--) {
                     moveTiles(vert, horiz, 0, -1);
                     combineTiles(vert, horiz, 0, -1);
                 }
             }
         } else {
-            for (int horiz = 0; horiz < 3; horiz++) {
-                for (int vert = 0; vert < 4; vert++) {
+            for (int horiz = 0; horiz < (boardSize-1); horiz++) {
+                for (int vert = 0; vert < boardSize; vert++) {
                     moveTiles(vert, horiz, 0, 1);
                     combineTiles(vert, horiz, 0, 1);
                 }
@@ -181,9 +186,11 @@ void printBoard() {
     if (score >= highScore) {
         cout << " - High Score!" << endl << reset;
         highScore = score;
-        ofstream scoresheet("scoresheet.txt");
-        scoresheet << highScore << endl;
-        scoresheet.close();
+        if(boardSize == 4){
+            ofstream scoresheet("scoresheet.txt");
+            scoresheet << highScore << endl;
+            scoresheet.close();
+        }
     } else {
         cout << endl << reset;
     }
@@ -200,20 +207,24 @@ void printBoard() {
 }
 
 void tileGen() {
-    int pos2x = (rand() % 10) % 4;
-    int pos2y = (rand() % 10) % 4;
+    int pos2x = (rand() % 10) % boardSize;
+    int pos2y = (rand() % 10) % boardSize;
     while (board[pos2x][pos2y] != 0) {
-        pos2x = (rand() % 10) % 4;
-        pos2y = (rand() % 10) % 4;
+        pos2x = (rand() % 10) % boardSize;
+        pos2y = (rand() % 10) % boardSize;
     }
     int newTile = randomNum();
     if (newTile >= 9) {
         board[pos2x][pos2y] = 4;
-        cout << ("Adding a tile of ") << 4 << (" at position ") << pos2x << (", ") << pos2y << endl;
+        if(logging) {
+            cout << ("Adding a tile of ") << 4 << (" at position ") << pos2x << (", ") << pos2y << endl;
+        }
 
     } else {
         board[pos2x][pos2y] = 2;
-        cout << ("Adding a tile of ") << 2 << (" at position ") << pos2x << (", ") << pos2y << endl;
+        if(logging){
+            cout << ("Adding a tile of ") << 2 << (" at position ") << pos2x << (", ") << pos2y << endl;
+        }
     }
     tilePlacedX = pos2x;
     tilePlacedY = pos2y;
@@ -253,27 +264,6 @@ int game() {
     board[1][1] = 2;
     board[1][2] = 2;*/
 
-
-    /*board[0][0] = 2;
-    board[1][0] = 4;
-    board[2][0] = 8;
-    board[3][0] = 16;
-
-    board[0][1] = 32;
-    board[1][1] = 64;
-    board[2][1] = 128;
-    board[3][1] = 256;
-
-    board[0][2] = 512;
-    board[1][2] = 1024;
-    board[2][2] = 2048;
-    board[3][2] = 4096;
-
-    board[0][3] = 8192;
-    board[1][3] = 0;
-    board[2][3] = 0;
-    board[3][3] = 0;*/
-
     playing = true;
 
     clearSpace(20);
@@ -304,6 +294,7 @@ int game() {
 
 int help() {
     clearSpace(10);
+    cout << "\u001b[7m" << "Help" << reset << endl;
     cout << "\u001b[1mWelcome to 2048!\n" << reset <<
          "\n"
          "2048 is a simple game in which\n"
@@ -335,14 +326,38 @@ int settings(){
     }else{
         cout << "C\u001b[7mo" << reset << "loring is disabled (good for terminals lacking 256 colors)" << endl;
     }
+    cout << "\u001b[38;5;34mIf this doesn't appear in color than you should disable coloring." << reset << endl;
+
+        if(logging){
+            cout <<  "\u001b[7mL" << reset << "ogging is enabled" << endl;
+        }else{
+            cout << "\u001b[7mL" << reset << "ogging is disabled" << endl;
+        }
+
+        cout <<  "\u001b[7mB" << reset << "oard size: " << boardSize << endl;
 
         cout << "\nPress \u001b[7mc" << reset << " to \u001b[7mc" << reset << "ontinue." << endl;
 
         scanf(" %c", &userInput);
         if (userInput == 'o') {
             coloring = !coloring;
-        } else if (userInput == 'x'){
+        } else if (userInput == 'c'){
             return 0;
+        } else if (userInput == 'l'){
+            logging = !logging;
+        }else if (userInput == 'b'){
+            bool userInputting = true;
+            int userNum;
+            while (userInputting) {
+                cout << "Note that setting a custom board size will disable \n"
+                        "saving your high score until set back to 4.\n" <<
+                        "Please enter a new board size (2-9): ";
+                std::cin >> userNum;
+                if(!cin.fail()){
+                    boardSize = userNum;
+                    userInputting = false;
+                }
+            }
         }
     }
 }
