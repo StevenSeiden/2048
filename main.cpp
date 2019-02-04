@@ -250,8 +250,8 @@ int randomNum() {
 }
 
 void newGame() {
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
             board[i][j] = {0};
         }
     }
