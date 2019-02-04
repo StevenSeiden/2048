@@ -1,8 +1,5 @@
 #include <stdio.h>
-#include <MacTypes.h>
-#include <math.h>
 #include <time.h>
-#include <stdlib.h>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -29,9 +26,13 @@ bool coloring = true;
 bool logging = true;
 
 void clearSpace(int lines);
+
 void tileGen();
+
 int randomNum();
+
 int help();
+
 int settings();
 
 /**
@@ -68,7 +69,7 @@ void combineTiles(int vert, int horiz, int moveVert, int moveHoriz);
 /**
  * @result A boolean stating true if the board is full
  */
-Boolean checkFull();
+bool checkFull();
 
 /**
  * @result Prints game over message and sets playing to false
@@ -95,32 +96,30 @@ int main() {
 
     clearSpace(10);
 
+    cout << red << " .d8888b.   " << green << ".d8888b.      " << yellow << "d8888   " << blue << ".d8888b.  \n"
+         << red << "d88P  Y88b " << green << "d88P  Y88b    " << yellow << "d8P888  " << blue << "d88P  Y88b \n"
+         << red << "       888 " << green << "888    888   " << yellow << "d8P 888  " << blue << "Y88b. d88P \n"
+         << red << "     .d88P " << green << "888    888  " << yellow << "d8P  888   " << blue << "\"Y88888\"  \n"
+         << red << " .od888P\"  " << green << "888    888 " << yellow << "d88   888  " << blue << ".d8P\"\"Y8b. \n"
+         << red << "d88P\"      " << green << "888    888 " << yellow << "8888888888 " << blue << "888    888 \n"
+         << red << "888\"       " << green << "Y88b  d88P       " << yellow << "888  " << blue << "Y88b  d88P \n"
+         << red << "888888888   " << green << "\"Y8888P\"        " << yellow << "888   " << blue << "\"Y8888P\" \n"
+         << reset << endl;
+
+    cout << "Welcome to 2048!" << endl;
+
+    cout << " \n\n\u001b[7mN" << reset << "ew game" << endl;
+    if (playing) {
+        cout << "\u001b[7mC" << reset << "ontinue game" << endl;
+    }
+    cout << "\nView " << "\u001b[7mh" << reset << "elp" << endl;
+    cout << "E" << "\u001b[7mx" << reset << "it game" << endl;
+    cout << "\u001b[7mS" << reset << "ettings" << endl;
+
+    cout << "\n\n" << "\u001b[7m Highscore: " << highScore <<
+         "    Create by Steven Seiden   © Steven Seiden 2019" << reset << endl;
     char userInput;
     while (true) {
-
-        cout << red << " .d8888b.   " << green << ".d8888b.      " << yellow << "d8888   " << blue << ".d8888b.  \n"
-             << red << "d88P  Y88b " << green << "d88P  Y88b    " << yellow << "d8P888  " << blue << "d88P  Y88b \n"
-             << red << "       888 " << green << "888    888   " << yellow << "d8P 888  " << blue << "Y88b. d88P \n"
-             << red << "     .d88P " << green << "888    888  " << yellow << "d8P  888   " << blue << "\"Y88888\"  \n"
-             << red << " .od888P\"  " << green << "888    888 " << yellow << "d88   888  " << blue << ".d8P\"\"Y8b. \n"
-             << red << "d88P\"      " << green << "888    888 " << yellow << "8888888888 " << blue << "888    888 \n"
-             << red << "888\"       " << green << "Y88b  d88P       " << yellow << "888  " << blue << "Y88b  d88P \n"
-             << red << "888888888   " << green << "\"Y8888P\"        " << yellow << "888   " << blue << "\"Y8888P\" \n"
-             << reset << endl;
-
-        cout << "Welcome to 2048!" << endl;
-
-        cout << " \n\n\u001b[7mN" << reset << "ew game" << endl;
-        if(playing){
-            cout << "\u001b[7mC" << reset <<"ontinue game" << endl;
-        }
-        cout << "\nView " << "\u001b[7mh" << reset << "elp" << endl;
-        cout << "E" << "\u001b[7mx" << reset << "it game" << endl;
-        cout <<  "\u001b[7mS" << reset << "ettings" << endl;
-
-        cout << "\n\n" << "\u001b[7m Highscore: " << highScore <<
-             "    Create by Steven Seiden   © Steven Seiden 2019" << reset << endl;
-
 
         scanf(" %c", &userInput);
         if (userInput == 'n') {
@@ -132,7 +131,7 @@ int main() {
             help();
         } else if (userInput == 'x') {
             return 0;
-        } else if (userInput == 's'){
+        } else if (userInput == 's') {
             settings();
         }
     }
@@ -154,13 +153,13 @@ void tileGen() {
     int newTile = randomNum();
     if (newTile >= 9) {
         board[pos2x][pos2y] = 4;
-        if(logging) {
+        if (logging) {
             cout << ("Adding a tile of ") << 4 << (" at position ") << pos2x << (", ") << pos2y << endl;
         }
 
     } else {
         board[pos2x][pos2y] = 2;
-        if(logging){
+        if (logging) {
             cout << ("Adding a tile of ") << 2 << (" at position ") << pos2x << (", ") << pos2y << endl;
         }
     }
@@ -192,36 +191,36 @@ int help() {
     }
 }
 
-int settings(){
+int settings() {
     char userInput;
     while (true) {
         clearSpace(20);
         cout << "\u001b[7m" << "Settings" << reset << "\n\n" << endl;
-        if(coloring){
-            cout <<  "C\u001b[7mo" << reset << "loring is enabled (good for 256 colored terminals)" << endl;
-        }else{
+        if (coloring) {
+            cout << "C\u001b[7mo" << reset << "loring is enabled (good for 256 colored terminals)" << endl;
+        } else {
             cout << "C\u001b[7mo" << reset << "loring is disabled (good for terminals lacking 256 colors)" << endl;
         }
         cout << "\u001b[38;5;34mIf this doesn't appear in color than you should disable coloring." << reset << endl;
 
-        if(logging){
-            cout <<  "\u001b[7mL" << reset << "ogging is enabled" << endl;
-        }else{
+        if (logging) {
+            cout << "\u001b[7mL" << reset << "ogging is enabled" << endl;
+        } else {
             cout << "\u001b[7mL" << reset << "ogging is disabled" << endl;
         }
 
-        cout <<  "\u001b[7mB" << reset << "oard size: " << boardSize << endl;
+        cout << "\u001b[7mB" << reset << "oard size: " << boardSize << endl;
 
         cout << "\nPress \u001b[7mc" << reset << " to \u001b[7mc" << reset << "ontinue." << endl;
 
         scanf(" %c", &userInput);
         if (userInput == 'o') {
             coloring = !coloring;
-        } else if (userInput == 'c'){
+        } else if (userInput == 'c') {
             return 0;
-        } else if (userInput == 'l'){
+        } else if (userInput == 'l') {
             logging = !logging;
-        }else if (userInput == 'b'){
+        } else if (userInput == 'b') {
             bool userInputting = true;
             int userNum;
             while (userInputting) {
@@ -230,7 +229,7 @@ int settings(){
                         "This will also end your current game.\n" <<
                      "Please enter a new board size (2-9): ";
                 std::cin >> userNum;
-                if(!cin.fail()){
+                if (!cin.fail()) {
                     boardSize = userNum;
                     userInputting = false;
                     playing = false;
@@ -250,9 +249,9 @@ int randomNum() {
     }
 }
 
-void newGame(){
-    for(int i = 0; i<10; i++){
-        for(int j = 0; j<10; j++){
+void newGame() {
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
             board[i][j] = {0};
         }
     }
@@ -295,7 +294,7 @@ int game() {
             if (checkFull()) {
                 gameOver();
             }
-        } else if(userInput == 'k'){
+        } else if (userInput == 'k') {
             coloring = false;
         }
     }
@@ -308,26 +307,26 @@ void adjust(char userInput) {
         if (userInput == 's' || userInput == 'w') {
             for (int horiz = 0; horiz < boardSize; horiz++) {
                 if (userInput == 's') {
-                    for (int vert = (boardSize-1); vert > 0; vert--) {
+                    for (int vert = (boardSize - 1); vert > 0; vert--) {
                         moveTiles(vert, horiz, -1, 0);
                         combineTiles(vert, horiz, -1, 0);
                     }
                 } else {
-                    for (int vert = 0; vert < (boardSize-1); vert++) {
+                    for (int vert = 0; vert < (boardSize - 1); vert++) {
                         moveTiles(vert, horiz, 1, 0);
                         combineTiles(vert, horiz, 1, 0);
                     }
                 }
             }
         } else if (userInput == 'd') {
-            for (int horiz = (boardSize-1); horiz > 0; horiz--) {
-                for (int vert = (boardSize-1); vert >= 0; vert--) {
+            for (int horiz = (boardSize - 1); horiz > 0; horiz--) {
+                for (int vert = (boardSize - 1); vert >= 0; vert--) {
                     moveTiles(vert, horiz, 0, -1);
                     combineTiles(vert, horiz, 0, -1);
                 }
             }
         } else {
-            for (int horiz = 0; horiz < (boardSize-1); horiz++) {
+            for (int horiz = 0; horiz < (boardSize - 1); horiz++) {
                 for (int vert = 0; vert < boardSize; vert++) {
                     moveTiles(vert, horiz, 0, 1);
                     combineTiles(vert, horiz, 0, 1);
@@ -341,7 +340,7 @@ void moveTiles(int vert, int horiz, int moveVert, int moveHoriz) {
     if (board[vert][horiz] == 0 && board[vert + moveVert][horiz + moveHoriz] != 0) {
         board[vert][horiz] = board[vert + moveVert][horiz + moveHoriz];
         board[vert + moveVert][horiz + moveHoriz] = 0;
-        if(logging){
+        if (logging) {
             printf("Moving (%d,%d) to (%d,%d).\n", (vert + moveVert), (horiz + moveHoriz), vert, horiz);
         }
         changesMade = true;
@@ -353,7 +352,7 @@ void combineTiles(int vert, int horiz, int moveVert, int moveHoriz) {
         board[vert][horiz] = (board[vert][horiz] * 2);
         //The vert and horiz values are meant to be swapped here.
         board[vert + moveVert][horiz + moveHoriz] = 0;
-        if(logging){
+        if (logging) {
             printf("Adding (%d,%d) to (%d,%d).\n", (vert + moveVert), (horiz + moveHoriz), vert, horiz);
         }
         score = score + board[vert][horiz];
@@ -364,8 +363,7 @@ void combineTiles(int vert, int horiz, int moveVert, int moveHoriz) {
     }
 }
 
-//This checks to see if the board is full, and returns true if full
-Boolean checkFull() {
+bool checkFull() {
     for (int i = 0; i <= (boardSize - 1); i++) {
         for (int j = 0; j <= (boardSize - 1); j++) {
             if (board[i][j] == 0) {
@@ -421,10 +419,10 @@ void printBoard() {
     }
 
     cout << "\u001b[7m" << ("Score: ") << score;
-    if (score >= highScore) {
+    if (score > highScore) {
         cout << " - High Score!" << endl << reset;
         highScore = score;
-        if(boardSize == 4){
+        if (boardSize == 4) {
             ofstream scoresheet("scoresheet.txt");
             scoresheet << highScore << endl;
             scoresheet.close();
@@ -445,7 +443,7 @@ void printBoard() {
 }
 
 string coloredNum(int value) {
-    if(coloring){
+    if (coloring) {
         switch (value) {
             case 0 :
                 return "\033[0m";
