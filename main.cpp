@@ -34,14 +34,56 @@ int randomNum();
 int help();
 int settings();
 
+/**
+ * @result All items in the board array are set to 0.
+ */
 void newGame();
+
 int game();
+
+/**
+ * @param userInput The move to make (up, down, left or right)
+ * @result An adjusted board array
+ */
 void adjust(char userInput);
+
+/**
+ * @param horiz The horizontal start position
+ * @param vert The vertical start position
+ * @param moveHoriz The amount of spaces to move horizontally
+ * @param moveVert The amount of spaces to move vertically
+ * @result A board with pieces that have move in a certain direction based on the 0s in front of it
+ */
 void moveTiles(int vert, int horiz, int moveVert, int moveHoriz);
+
+/**
+ * @param horiz The horizontal start position
+ * @param vert The vertical start position
+ * @param moveHoriz The amount of spaces to move horizontally
+ * @param moveVert The amount of spaces to move vertically
+ * @result A board with adjacent like pieces combined depending on the direction moved
+ */
 void combineTiles(int vert, int horiz, int moveVert, int moveHoriz);
+
+/**
+ * @result A boolean stating true if the board is full
+ */
 Boolean checkFull();
+
+/**
+ * @result Prints game over message and sets playing to false
+ */
 int gameOver();
+
+/**
+ * @result Prints the game board
+ */
 void printBoard();
+
+/**
+ * @param value The number to find a color for
+ * @result Prints an escape string based on the value given
+ */
 string coloredNum(int value);
 
 int main() {
