@@ -94,6 +94,8 @@ int main() {
     scoresheet >> highScore;
     scoresheet.close();
 
+    char userInput;
+    while (true) {
     clearSpace(10);
 
     cout << red << " .d8888b.   " << green << ".d8888b.      " << yellow << "d8888   " << blue << ".d8888b.  \n"
@@ -118,8 +120,6 @@ int main() {
 
     cout << "\n\n" << "\u001b[7m Highscore: " << highScore <<
          "    Create by Steven Seiden   © Steven Seiden 2019" << reset << endl;
-    char userInput;
-    while (true) {
 
         scanf(" %c", &userInput);
         if (userInput == 'n') {
