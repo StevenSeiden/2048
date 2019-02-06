@@ -96,7 +96,7 @@ int main() {
 
     char userInput;
     while (true) {
-    clearSpace(10);
+    clearSpace(20);
 
     cout << red << " .d8888b.   " << green << ".d8888b.      " << yellow << "d8888   " << blue << ".d8888b.  \n"
          << red << "d88P  Y88b " << green << "d88P  Y88b    " << yellow << "d8P888  " << blue << "d88P  Y88b \n"
@@ -114,11 +114,11 @@ int main() {
     if (playing) {
         cout << "\u001b[7mC" << reset << "ontinue game" << endl;
     }
-    cout << "\nView " << "\u001b[7mh" << reset << "elp" << endl;
-    cout << "E" << "\u001b[7mx" << reset << "it game" << endl;
+    cout << "\nView \u001b[7mh" << reset << "elp" << endl;
+    cout << "E\u001b[7mx" << reset << "it game" << endl;
     cout << "\u001b[7mS" << reset << "ettings" << endl;
 
-    cout << "\n\n" << "\u001b[7m Highscore: " << highScore <<
+    cout << "\n\n\u001b[7m Highscore: " << highScore <<
          "    Create by Steven Seiden   © Steven Seiden 2019" << reset << endl;
 
         scanf(" %c", &userInput);
@@ -197,19 +197,21 @@ int settings() {
         clearSpace(20);
         cout << "\u001b[7m" << "Settings" << reset << "\n\n" << endl;
         if (coloring) {
-            cout << "C\u001b[7mo" << reset << "loring is enabled (good for 256 colored terminals)" << endl;
+            cout << "C\u001b[7mo" << reset << "loring: enabled (good for 256 colored terminals)" << endl;
         } else {
-            cout << "C\u001b[7mo" << reset << "loring is disabled (good for terminals lacking 256 colors)" << endl;
+            cout << "C\u001b[7mo" << reset << "loring: disabled (good for terminals lacking 256 colors)" << endl;
         }
-        cout << "\u001b[38;5;34mIf this doesn't appear in color than you should disable coloring." << reset << endl;
+        cout << "\u001b[38;5;212m(If this line doesn't appear in color than disable coloring.)\n" << reset << endl;
 
         if (logging) {
-            cout << "\u001b[7mL" << reset << "ogging is enabled" << endl;
+            cout << "\u001b[7mL" << reset << "ogging: enabled" << endl;
         } else {
-            cout << "\u001b[7mL" << reset << "ogging is disabled" << endl;
+            cout << "\u001b[7mL" << reset << "ogging: disabled" << endl;
         }
 
         cout << "\u001b[7mB" << reset << "oard size: " << boardSize << endl;
+
+        cout << "\n\u001b[7mR" << reset << "eset high score" << endl;
 
         cout << "\nPress \u001b[7mc" << reset << " to \u001b[7mc" << reset << "ontinue." << endl;
 
@@ -233,6 +235,24 @@ int settings() {
                     boardSize = userNum;
                     userInputting = false;
                     playing = false;
+                }
+            }
+        } else if (userInput == 'r'){
+            cout << "Resetting your score will also end your game."
+                    "Are you sure you want to continue? (y/n): ";
+            bool userInputting = true;
+            char yesNo;
+            while (userInputting) {
+                std::cin >> yesNo;
+                if(yesNo == 'y'){
+                    ofstream scoresheet("scoresheet.txt");
+                    scoresheet << 0 << endl;
+                    scoresheet.close();
+                    highScore = 0;
+                    playing = false;
+                    userInputting = false;
+                } else {
+                    userInputting = false;
                 }
             }
         }
@@ -438,7 +458,7 @@ void printBoard() {
                 cout << coloredNum(board[i][j]) << setfill(' ') << setw(8) << board[i][j];
             }
         }
-        cout << endl;
+        cout << "\n" << endl;
     }
 }
 
