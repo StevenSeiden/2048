@@ -27,6 +27,8 @@ bool logging = true;
 
 void clearSpace(int lines);
 
+int tipOfTheDay();
+
 void tileGen();
 
 int randomNum();
@@ -94,32 +96,34 @@ int main() {
     scoresheet >> highScore;
     scoresheet.close();
 
+    tipOfTheDay();
+
     char userInput;
     while (true) {
-    clearSpace(20);
+        clearSpace(20);
 
-    cout << red << " .d8888b.   " << green << ".d8888b.      " << yellow << "d8888   " << blue << ".d8888b.  \n"
-         << red << "d88P  Y88b " << green << "d88P  Y88b    " << yellow << "d8P888  " << blue << "d88P  Y88b \n"
-         << red << "       888 " << green << "888    888   " << yellow << "d8P 888  " << blue << "Y88b. d88P \n"
-         << red << "     .d88P " << green << "888    888  " << yellow << "d8P  888   " << blue << "\"Y88888\"  \n"
-         << red << " .od888P\"  " << green << "888    888 " << yellow << "d88   888  " << blue << ".d8P\"\"Y8b. \n"
-         << red << "d88P\"      " << green << "888    888 " << yellow << "8888888888 " << blue << "888    888 \n"
-         << red << "888\"       " << green << "Y88b  d88P       " << yellow << "888  " << blue << "Y88b  d88P \n"
-         << red << "888888888   " << green << "\"Y8888P\"        " << yellow << "888   " << blue << "\"Y8888P\" \n"
-         << reset << endl;
+        cout << red << " .d8888b.   " << green << ".d8888b.      " << yellow << "d8888   " << blue << ".d8888b.  \n"
+             << red << "d88P  Y88b " << green << "d88P  Y88b    " << yellow << "d8P888  " << blue << "d88P  Y88b \n"
+             << red << "       888 " << green << "888    888   " << yellow << "d8P 888  " << blue << "Y88b. d88P \n"
+             << red << "     .d88P " << green << "888    888  " << yellow << "d8P  888   " << blue << "\"Y88888\"  \n"
+             << red << " .od888P\"  " << green << "888    888 " << yellow << "d88   888  " << blue << ".d8P\"\"Y8b. \n"
+             << red << "d88P\"      " << green << "888    888 " << yellow << "8888888888 " << blue << "888    888 \n"
+             << red << "888\"       " << green << "Y88b  d88P       " << yellow << "888  " << blue << "Y88b  d88P \n"
+             << red << "888888888   " << green << "\"Y8888P\"        " << yellow << "888   " << blue << "\"Y8888P\" \n"
+             << reset << endl;
 
-    cout << "Welcome to 2048!" << endl;
+        cout << "Welcome to 2048!" << endl;
 
-    cout << " \n\n\u001b[7mN" << reset << "ew game" << endl;
-    if (playing) {
-        cout << "\u001b[7mC" << reset << "ontinue game" << endl;
-    }
-    cout << "\nView \u001b[7mh" << reset << "elp" << endl;
-    cout << "E\u001b[7mx" << reset << "it game" << endl;
-    cout << "\u001b[7mS" << reset << "ettings" << endl;
+        cout << " \n\n\u001b[7mN" << reset << "ew game" << endl;
+        if (playing) {
+            cout << "\u001b[7mC" << reset << "ontinue game" << endl;
+        }
+        cout << "\nView \u001b[7mh" << reset << "elp" << endl;
+        cout << "E\u001b[7mx" << reset << "it game" << endl;
+        cout << "\u001b[7mS" << reset << "ettings" << endl;
 
-    cout << "\n\n\u001b[7m Highscore: " << highScore <<
-         "    Create by Steven Seiden   © Steven Seiden 2019" << reset << endl;
+        cout << "\n\n\u001b[7m Highscore: " << highScore <<
+             "    Create by Steven Seiden   © Steven Seiden 2019" << reset << endl;
 
         scanf(" %c", &userInput);
         if (userInput == 'n') {
@@ -142,6 +146,29 @@ void clearSpace(int lines) {
     for (n = 0; n < lines; n++)
         printf("\n");
 }
+
+int tipOfTheDay() {
+    cout << "\u001b[7m" << "Tip of the day" << reset << "\n" << endl;
+    int todaysTip = (rand() % 10) % 8;
+    if (todaysTip == 1) { cout << "Look several moves ahead" << endl; }
+    else if (todaysTip == 2) { cout << "Don’t choose the first move you see" << endl; }
+    else if (todaysTip == 3) { cout << "Try grouping numbers together by size" << endl; }
+    else if (todaysTip == 4) { cout << "Try only using 3 of 4 moves when possible" << endl; }
+    else if (todaysTip == 5) { cout << "Develop a strategy" << endl; }
+    else if (todaysTip == 6) { cout << "Try getting the larger numbers in the center" << endl; }
+    else if (todaysTip == 7) { cout << "Try to not have a small number surrounded by large ones" << endl; }
+    else { cout << "Star this project at https://github.com/StevenSeiden/2048!" << endl; }
+
+    cout << "\nPress \u001b[7mc" << reset << " to \u001b[7mc" << reset << "ontinue." << endl;
+    char userInput;
+    while(true){
+        scanf(" %c", &userInput);
+        if (userInput == 'c') {
+            return 0;
+        }
+    }
+}
+
 
 void tileGen() {
     int pos2x = (rand() % 10) % boardSize;
@@ -237,14 +264,14 @@ int settings() {
                     playing = false;
                 }
             }
-        } else if (userInput == 'r'){
+        } else if (userInput == 'r') {
             cout << "Resetting your score will also end your game."
                     "Are you sure you want to continue? (y/n): ";
             bool userInputting = true;
             char yesNo;
             while (userInputting) {
                 std::cin >> yesNo;
-                if(yesNo == 'y'){
+                if (yesNo == 'y') {
                     ofstream scoresheet("scoresheet.txt");
                     scoresheet << 0 << endl;
                     scoresheet.close();
